@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Web.Publishing.Tasks;
+using System.IO;
 
 namespace TransformXml {
     class Program {
@@ -7,9 +8,11 @@ namespace TransformXml {
 
             Console.WriteLine("TransformXml.exe source.xml transform.xml destination.xml");
 
+            var inputStream = new MemoryStream(File.ReadAllBytes(args[0]));
+
             XmlTransformableDocument document = new XmlTransformableDocument();
             document.PreserveWhitespace = true;
-            document.Load(args[0]);
+            document.Load(inputStream);
 
             XmlTransformation transformation;
             transformation = new XmlTransformation(args[1], new Logger());
@@ -45,12 +48,15 @@ namespace TransformXml {
         }
 
         public void LogErrorFromException(Exception ex, string file, int lineNumber, int linePosition) {
+            Console.WriteLine(ex.Message);
         }
 
         public void LogErrorFromException(Exception ex, string file) {
+            Console.WriteLine(ex.Message);
         }
 
         public void LogErrorFromException(Exception ex) {
+            Console.WriteLine(ex.Message);
         }
 
         public void LogMessage(MessageType type, string message, params object[] messageArgs) {
